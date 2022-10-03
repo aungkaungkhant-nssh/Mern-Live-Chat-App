@@ -1,11 +1,23 @@
-import logo from './logo.svg';
-import './App.css';
 
+import MainRouter from './routes/MainRouter';
+import {colors, createTheme, ThemeProvider} from '@mui/material'
+
+
+const theme = createTheme({
+  palette:{
+    primary:{
+      main:colors.teal[500]
+    },
+    secondary:{
+      main:colors.deepPurple[500]
+    }
+  }
+})
 function App() {
   return (
-    <div className="App">
-      client
-    </div>
+    <ThemeProvider theme={theme}>
+      <MainRouter />
+    </ThemeProvider>
   );
 }
 
