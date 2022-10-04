@@ -40,6 +40,10 @@ exports.userLogin = async(req,res)=>{
     }
 }
 
+exports.findUser = async(req,res)=>{
+    console.log(req.user)
+}
+
 function loginValidate(user){
     const Schema = Joi.object({
         email:Joi.string().email().required(),
