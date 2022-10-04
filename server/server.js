@@ -4,14 +4,14 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 require('dotenv').config();
 
-const userAuthRoute = require('./routes/userAuth');
+const userRoute = require('./routes/userRoute');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.use('/api/user',userAuthRoute);
+app.use('/api/user',userRoute);
 
-
+// a
 mongoose.connect(process.env.DB_URL)
 .then(()=>{
     app.listen(process.env.PORT,()=>{
