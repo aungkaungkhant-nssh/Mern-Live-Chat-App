@@ -7,7 +7,6 @@ const isAuth =async (req,res,next)=>{
         try{
             let token = authorization.split(' ')[1];
             const decoded =  jwt.verify(token,process.env.JWT_KEY);
-            console.log(decoded)
             let user = await User.findById(decoded._id).select("-password");
             req.user = user;
             next()

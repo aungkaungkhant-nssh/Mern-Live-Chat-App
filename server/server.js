@@ -5,13 +5,14 @@ const mongoose = require("mongoose");
 require('dotenv').config();
 
 const userRoute = require('./routes/userRoute');
+const chatRoute = require("./routes/chatRoute");
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use('/api/user',userRoute);
+app.use('/api/chat',chatRoute);
 
-// a
 mongoose.connect(process.env.DB_URL)
 .then(()=>{
     app.listen(process.env.PORT,()=>{

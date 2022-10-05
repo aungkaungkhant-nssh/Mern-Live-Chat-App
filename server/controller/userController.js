@@ -1,6 +1,9 @@
 const {validate,User} = require('../model/User');
 const _ = require("lodash");
 const Joi = require("joi");
+
+// @desc    useRegister
+// @route   POST /api/user
 exports.userRegister = async(req,res)=>{
     const {error} = validate(req.body);
     if(error) return res.status(400).send({message:error.details[0].message});
@@ -18,7 +21,8 @@ exports.userRegister = async(req,res)=>{
     }
   
 }
-
+// @desc    useLogin
+// @route   POST /api/user
 exports.userLogin = async(req,res)=>{
     const {error} = loginValidate(req.body);
     if(error) return res.status(400).send({message:error.details[0].message});
@@ -35,13 +39,28 @@ exports.userLogin = async(req,res)=>{
             res.status(400).json({message:"You Email Or Password Invalid"})
         }
     }catch(err){
-        console.log(err)
         res.status(500).json({message:"Something went wrong"});
     }
 }
-
+// @desc    findUser
+// @route   GET /api/user
+// @access  protected
 exports.findUser = async(req,res)=>{
-    console.log(req.user)
+    const searchUser =req.query.search ? {
+        $or:[
+            {name:{$regex:req.query.search,$options:"i"}},
+            {email:{$regex:req.query.search,$options:"i"}},
+        ]
+    }:{}
+    try{
+        let user= await User.find(searchUser,"-password").find({_id:{$ne:req.user._id}});
+        res.status(200).json({data:user});
+    }catch(err){
+        console.log(err)
+        res.status(500).json({messag:"Something went wrong"})
+    }
+    
+
 }
 
 function loginValidate(user){
