@@ -2,7 +2,8 @@
 import MainRouter from './routes/MainRouter';
 import {colors, createTheme, ThemeProvider} from '@mui/material'
 
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const theme = createTheme({
   palette:{
     primary:{
@@ -17,6 +18,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <MainRouter />
+      <ToastContainer />
     </ThemeProvider>
   );
 }
