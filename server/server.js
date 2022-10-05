@@ -6,12 +6,14 @@ require('dotenv').config();
 
 const userRoute = require('./routes/userRoute');
 const chatRoute = require("./routes/chatRoute");
+const messageRoute = require('./routes/messageRoute');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use('/api/user',userRoute);
 app.use('/api/chat',chatRoute);
+app.use('/api/message',messageRoute);
 
 mongoose.connect(process.env.DB_URL)
 .then(()=>{
