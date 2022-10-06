@@ -11,6 +11,10 @@ const theme = createTheme({
     },
     secondary:{
       main:colors.deepPurple[500]
+    },
+    darkness:{
+      main:colors.grey[900],
+      light:colors.grey[200]
     }
   }
 })
