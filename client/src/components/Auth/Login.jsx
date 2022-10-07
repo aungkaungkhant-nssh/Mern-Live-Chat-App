@@ -27,7 +27,7 @@ function Login() {
       setLoading("false");
       navigate("/chat");
     }catch(err){
-        setLoading(false)
+        setLoading(false);
         setError(true);
         setErrorMessage(err.response.data.message);
     }

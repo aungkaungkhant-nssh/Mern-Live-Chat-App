@@ -1,10 +1,11 @@
 import React from 'react'
 import Navbar from '../components/Navbar'
-
+import { AuthState } from '../context/AuthProvider';
 function Chat() {
+  const user= AuthState();
   return (
     <>
-      <Navbar />
+      {user && <Navbar />}
     </>
   )
 }

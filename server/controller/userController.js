@@ -54,13 +54,26 @@ exports.findUser = async(req,res)=>{
     }:{}
     try{
         let user= await User.find(searchUser,"-password").find({_id:{$ne:req.user._id}});
+        if(!user.length) return res.status(404).json({message:"Search Not Found"})
         res.status(200).json({data:user});
     }catch(err){
         console.log(err)
-        res.status(500).json({messag:"Something went wrong"})
+        res.status(500).json({message:"Something went wrong"})
     }
     
 
+}
+// @desc    updateProfilePicture
+// @route   PUT /api/user/update_profile_picture
+// @access  protected
+exports.updateProfilePicture = async(req,res)=>{
+    try{
+        let user = await User.findByIdAndUpdate(req.user._id,{pic:req.body.pic});
+        user = await User.findById(user._id,"-password");
+        res.status(200).json({data:user})
+    }catch(err){
+        res.status(500).json({message:"Something went wrong"});
+    }
 }
 
 function loginValidate(user){

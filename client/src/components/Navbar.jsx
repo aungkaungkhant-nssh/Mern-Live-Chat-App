@@ -1,24 +1,30 @@
 import React,{useState} from 'react'
 import {AppBar,Toolbar,Box,IconButton,Typography,Badge,Menu,MenuItem,Avatar,Divider, Tooltip} from "@mui/material";
-import {Search,Notifications,Logout,AccountCircle} from "@mui/icons-material";
+import {Search,Notifications,Logout,Settings,AccountCircle} from "@mui/icons-material";
 import SearchBar from '@mkyy/mui-search-bar';
 import { deepPurple,grey } from '@mui/material/colors';
 import { AuthState } from '../context/AuthProvider';
 import ProfileDialog from './User/ProfileDialog';
+import { useNavigate } from 'react-router-dom';
+import SideDrawer from './User/SideDrawer';
 
 function Navbar() {
-
   const user= AuthState();
   const [anchorEl,setanchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const [showDialog,setShowDialog] = useState(false);
+  const [showSideDrawer,setShowSideDrawer] = useState(false);
+  const navigate  =useNavigate();
   const handleClick = (event) => {
     setanchorEl(event.currentTarget);
   };
   const handleClose = () => {
     setanchorEl(null);
   };
-  if(!user) return;
+  const userLogout = ()=>{
+    localStorage.removeItem("userInfo");
+    navigate("/");
+  }
   return (
     <>
        <AppBar position="static" color="secondary">
@@ -29,14 +35,16 @@ function Navbar() {
           color="inherit"
           aria-label="open drawer"
           sx={{ mr: 2 ,display:{xs:"inline-block",md:"none"}}}
+          onClick={()=>setShowSideDrawer(true)}
         >
           <Search />
         </IconButton>
-      <Box sx={{display:{xs:"none",md:"inline-block"}}}>
+      <Box sx={{display:{xs:"none",md:"inline-block"}}}  onClick={()=>setShowSideDrawer(true)}>
           <SearchBar
               disabled
               style={{backgroundColor:grey[50],color:deepPurple[500]}}
               searchIcon={<Search  />}
+             
           />
       </Box>
       
@@ -69,7 +77,7 @@ function Navbar() {
                 aria-expanded={open ? 'true' : undefined}
                 onClick={handleClick}
               >
-                <Avatar src={user.image}/>
+                <Avatar src={user.pic}/>
               </IconButton>
   
           </Tooltip>
@@ -86,8 +94,8 @@ function Navbar() {
                 filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
                 mt: 1.5,
                 '& .MuiAvatar-root': {
-                  width: 32,
-                  height: 32,
+                  width: 50,
+                  height: 50,
                   ml: -0.5,
                   mr: 1,
                 },
@@ -111,16 +119,20 @@ function Navbar() {
             anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
           >
               <MenuItem onClick={()=>setShowDialog(true)}>
-                <Avatar src={user.image}  sx={{ width: 24, height: 24 }}/>  Profile
+                 <AccountCircle sx={{marginRight:"10px"}} />  Profile
+              </MenuItem>
+              <MenuItem onClick={()=>setShowDialog(true)}>
+                <Settings  sx={{marginRight:"10px"}}/> Account Setting
               </MenuItem>
               <Divider />
-              <MenuItem>
-                <Logout  sx={{marginRight:"6px"}}/>  Logout
+              <MenuItem onClick={userLogout}>
+                <Logout  sx={{marginRight:"10px"}}/>  Logout
               </MenuItem>
           </Menu>
         </Box>
       </Toolbar>
        </AppBar>
+       <SideDrawer open={showSideDrawer} setOpen={setShowSideDrawer} />
        <ProfileDialog open={showDialog} setOpen={setShowDialog}/>
     </>
    
