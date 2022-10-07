@@ -9,10 +9,10 @@ const AuthProvider = ({children})=>{
       let userInfo = localStorage.getItem("userInfo")? JSON.parse(localStorage.getItem("userInfo")) :null;
       if(!userInfo) navigate("/");
       else {
-        setUser(userInfo);
         navigate("/chat")
       }
-    },[])
+      setUser(userInfo);
+    },[navigate])
 
     return (
         <AuthContext.Provider value={user}>
