@@ -5,20 +5,35 @@ const { Chat } = require("../model/Chat");
 // @access  protected
 exports.accessChat = async(req,res,next)=>{
     const {id} = req.body;
+    console.log(id)
     const authUserId = req.user._id;
     try{
-        let chat = await Chat.find({isGroupChat:false,
-            $and:[
-                {users:{$elemMatch:{$eq:id}}},
-                {users:{$elemMatch:{$eq:req.user._id}}}
-            ]
-        }).populate("users","-password");;
+        let chat = await Chat.find({
+            
+                $or:[
+                    {
+                        $and:[
+                            {users:{$elemMatch:{$eq:id}}},
+                            {users:{$elemMatch:{$eq:req.user._id}}}
+                        ]
+                    },
+                    {
+                      _id:id  
+                    }
+                ]
+            }
+           
+        ).populate("users","-password");
+      
+        
         if(chat.length){
-            res.send(chat[0]);
+            console.log(chat[0])
+            res.status(200).json({message:"Creat Chat",data:chat[0]});
         }else{
+            console.log("don")
             let createChat = await Chat.create({users:[authUserId,id]});
             createChat =await Chat.findById(createChat._id).populate("users","-password");
-            res.status(201).send({message:"Create Chat",data:createChat})
+            res.status(201).json({message:"Create Chat",data:createChat})
         }
     }catch(err){
         res.status(500).json({message:"Something went wrong"})
