@@ -8,7 +8,7 @@ import ProfileDialog from './User/ProfileDialog';
 import { useNavigate } from 'react-router-dom';
 import SideDrawer from './User/SideDrawer';
 
-function Navbar() {
+function Navbar({accessChat}) {
   const user= AuthState();
   const [anchorEl,setanchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -132,7 +132,7 @@ function Navbar() {
         </Box>
       </Toolbar>
        </AppBar>
-       <SideDrawer open={showSideDrawer} setOpen={setShowSideDrawer} />
+       <SideDrawer open={showSideDrawer} setOpen={setShowSideDrawer} accessChat={accessChat}/>
        <ProfileDialog open={showDialog} setOpen={setShowDialog}/>
     </>
    

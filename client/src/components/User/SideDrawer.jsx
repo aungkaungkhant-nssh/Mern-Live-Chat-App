@@ -6,14 +6,13 @@ import {grey } from '@mui/material/colors';
 import Axios from '../../config/Axios';
 import {AuthState} from '../../context/AuthProvider';
 import SearchUser from './SearchUser';
-function SideDrawer({open,setOpen}) {
+function SideDrawer({open,setOpen,accessChat}) {
   const [searchKey,setSearchKey] = useState("");
   const [loading,setLoading] = useState(false);
   const [searchUsers,setsearchUsers] = useState([]);
   const [notFound,setNotFound] = useState(null);
   const user = AuthState();
   const searchUser = async (value)=>{
-    console.log(value)
     if(!value){
       setNotFound(null);
       setsearchUsers([]);
@@ -43,6 +42,11 @@ function SideDrawer({open,setOpen}) {
       
     }, 4000);
   }
+  const handleClick = (value)=>{
+    setOpen(false);
+    accessChat(value); 
+  }
+
   return (
     <Drawer
     anchor="left"
@@ -74,7 +78,7 @@ function SideDrawer({open,setOpen}) {
                   <Box  borderRadius="5px" sx={{maxHeight:"90%",overflow:"auto"}}>
                     <List sx={{padding:"5px"}}>
                           {searchUsers.map((user)=>(
-                              <SearchUser user ={user}/>
+                              <SearchUser user ={user} accessChat={handleClick} key={user._id}/>
                           ))}
                           
                     </List>
