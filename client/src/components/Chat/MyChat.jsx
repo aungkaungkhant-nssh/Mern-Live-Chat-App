@@ -6,7 +6,7 @@ import { AuthState } from '../../context/AuthProvider';
 import {getSender} from '../../config/ChatLogic'
 import CreateGroupDialog from './CreateGroupDialog';
 
-function MyChat({chats,setChats}) {
+function MyChat({chats,setChats,selectForChat}) {
     const user = AuthState();
     const [showCreateGroup,setShowCreateGroup] = useState(false);
   
@@ -24,7 +24,7 @@ function MyChat({chats,setChats}) {
         <List sx={{padding:"5px"}}>
             {
               chats.length > 0 &&  chats.map((chat)=>(
-                    <ListItem key={chat._id} sx={{padding:"10px",marginBottom:"12px",backgroundColor:grey[200],borderRadius:"5px",cursor:"pointer"}}>
+                    <ListItem onClick={()=>selectForChat(chat)} key={chat._id} sx={{padding:"10px",marginBottom:"12px",backgroundColor:grey[200],borderRadius:"5px",cursor:"pointer"}}>
                         <ListItemAvatar>
                             <Avatar src={chat.isGroupChat ? chat.gpPic || "" : getSender(user,chat).pic} /> 
                         </ListItemAvatar>

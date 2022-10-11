@@ -14,6 +14,7 @@ const theme = createTheme({
     },
     darkness:{
       main:colors.grey[900],
+      middle:colors.grey[500],
       light:colors.grey[200]
     }
   }

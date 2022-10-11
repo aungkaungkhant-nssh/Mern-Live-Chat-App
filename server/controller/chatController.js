@@ -5,11 +5,9 @@ const { Chat } = require("../model/Chat");
 // @access  protected
 exports.accessChat = async(req,res,next)=>{
     const {id} = req.body;
-    console.log(id)
     const authUserId = req.user._id;
     try{
         let chat = await Chat.find({
-            
                 $or:[
                     {
                         $and:[
@@ -18,19 +16,16 @@ exports.accessChat = async(req,res,next)=>{
                         ]
                     },
                     {
-                      _id:id  
+                        _id:id
                     }
                 ]
             }
            
         ).populate("users","-password");
-      
         
         if(chat.length){
-            console.log(chat[0])
             res.status(200).json({message:"Creat Chat",data:chat[0]});
         }else{
-            console.log("don")
             let createChat = await Chat.create({users:[authUserId,id]});
             createChat =await Chat.findById(createChat._id).populate("users","-password");
             res.status(201).json({message:"Create Chat",data:createChat})
@@ -91,10 +86,21 @@ exports.addToGroup = async (req,res)=>{
 exports.removeFromGroup = async(req,res)=>{
     const {chatId,userId} = req.body;
     if(!chatId || !userId) return;
+    
     try{
         let removedFromChat = await Chat.findByIdAndUpdate(chatId,{$pull:{users:userId}});
         if(!removedFromChat) return res.status(404).json({message:"Chat Not Found"});
-        removedFromChat = await Chat.findById(removedFromChat._id).populate("users","-password").populate("groupAdmin","-password")
+        removedFromChat = await Chat.findById(removedFromChat._id).populate("users","-password").populate("groupAdmin","-password");
+
+        /* total users is 2 then group is delete */
+        if(removedFromChat.users.length <= 2){
+            console.log("work")
+            await Chat.findByIdAndDelete(chatId);
+        }
+        /* Admin is leave from group and add random groupAdmin */
+        if(userId ==req.user._id){ 
+            await Chat.findByIdAndUpdate(chatId,{groupAdmin:removedFromChat.users[0]._id})
+        }
         res.status(200).json({message:"Remove from group success",data:removedFromChat});
     }catch(err){
         console.log(err)

@@ -44,6 +44,8 @@ function SideDrawer({open,setOpen,accessChat}) {
   }
   const handleClick = (value)=>{
     setOpen(false);
+    setsearchUsers([]);
+    setSearchKey("");
     accessChat(value); 
   }
 
