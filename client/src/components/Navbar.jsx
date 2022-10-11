@@ -25,6 +25,7 @@ function Navbar({accessChat}) {
     localStorage.removeItem("userInfo");
     navigate("/");
   }
+ 
   return (
     <>
        <AppBar position="static" color="secondary">
@@ -133,7 +134,7 @@ function Navbar({accessChat}) {
       </Toolbar>
        </AppBar>
        <SideDrawer open={showSideDrawer} setOpen={setShowSideDrawer} accessChat={accessChat}/>
-       <ProfileDialog open={showDialog} setOpen={setShowDialog}/>
+       {showDialog && <ProfileDialog open={showDialog} setOpen={setShowDialog} profileUser={user}/>}
     </>
    
   )

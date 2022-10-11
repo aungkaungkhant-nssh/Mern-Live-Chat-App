@@ -9,6 +9,7 @@ function CreateGroupDialog({open,setOpen,chats,setChats}) {
   const [chatName,setChatName] = useState("");
   const [searchKey,setSearchKey] = useState("");
   const [loading,setLoading]  = useState(false);
+  const [createLoading,setCreateLoading] = useState(false);
   const [searchUsers,setSearchUsers] = useState([]);
   const [users,setUsers] = useState([]);
 
@@ -52,7 +53,7 @@ function CreateGroupDialog({open,setOpen,chats,setChats}) {
   const handleCreateGroup = async(e)=>{
     e.preventDefault();
     if(!chatName || !users.length)return;
-    
+    setCreateLoading(true)
     const config = {
       headers:{
         authorization:`Bearer ${user.token}`
@@ -61,7 +62,7 @@ function CreateGroupDialog({open,setOpen,chats,setChats}) {
     try{
       let createGroup =await Axios.post("/api/chat/create",{chatName,users},config);
       setChats([...chats,createGroup.data.data]);
-      setLoading(false);
+      setCreateLoading(false);
       setOpen(false);
       setChatName("");
       setUsers([]);
@@ -70,7 +71,7 @@ function CreateGroupDialog({open,setOpen,chats,setChats}) {
         autoClose: 5000,
       });
     }catch(err){
-      setLoading(false);
+      setCreateLoading(false);
       toast.error(err.response.data.message,{
         position: "top-right",
         autoClose: 5000,
@@ -140,7 +141,7 @@ function CreateGroupDialog({open,setOpen,chats,setChats}) {
                             
                           )
                         }
-                    <LoadingButton    type="submit" variant="contained" color="secondary" sx={{width:"100%"}} loadingPosition='center'>Create</LoadingButton>
+                    <LoadingButton loading={createLoading}   type="submit" variant="contained" color="secondary" sx={{width:"100%"}} loadingPosition='center'>Create</LoadingButton>
                   </form>
                 
                 </Box>

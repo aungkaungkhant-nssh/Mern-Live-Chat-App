@@ -55,12 +55,12 @@ exports.findUser = async(req,res)=>{
     }:{};
     try{
         let user= await User.find(searchUser,"-password").find({_id:{$ne:req.user._id}});
-        let searchWithChatName = req.query.search ? {chatName:{$regex:req.query.search,$options:"i"}} : {}
-        let chats =  await Chat.find(searchWithChatName).find({chatName:{$ne:"sender"}}).populate("groupAdmin","-password");
-        // if(!user.length) return res.status(404).json({message:"Search Not Found"})
+        let searchWithChatName = req.query.search ? {chatName:{$regex:req.query.search,$options:"i"}} : {};
+        let chats =  await Chat.find(searchWithChatName).find({chatName:{$ne:"sender"},users:{$in:req.user._id}}).populate("groupAdmin","-password");
+        if(user.length <=0 && chats.length<=0) return res.status(404).json({message:"Search Not Found"})
         res.status(200).json({data:[...user,...chats]});
     }catch(err){
-        console.log(err)
+
         res.status(500).json({message:"Something went wrong"})
     }
     
