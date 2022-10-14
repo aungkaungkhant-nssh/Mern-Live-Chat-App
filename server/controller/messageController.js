@@ -26,10 +26,10 @@ exports.sendMessage = async(req,res,next)=>{
         let messages = await Message.create({sender:req.user._id,content,chat:chatId});
          messages =await  messages.populate("sender","name pic email");
          messages =await messages.populate({path:"chat",populate:{path:"users",select:"name pic email"}})
-         await Chat.findByIdAndUpdate(chatId,{latestMessage:messages._id})
-        res.status(201).json({message:"Send Messaege Success",data:messages})
+         let chat= await Chat.findByIdAndUpdate(chatId,{latestMessage:messages._id});
+        chat = await Chat.findById(chat._id);
+        res.status(201).json({message:"Send Messaege Success",data:{messages,chat}})
     }catch(err){
-        console.log(err)
         res.status(500).json({message:"Something went wrong"});
     }
 }

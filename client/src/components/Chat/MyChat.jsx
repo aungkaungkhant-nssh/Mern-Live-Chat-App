@@ -11,7 +11,7 @@ function MyChat({chats,setChats,selectForChat}) {
     const [showCreateGroup,setShowCreateGroup] = useState(false);
   
   return (
-    <Paper sx={{padding:"15px 20px",height:"80vh"}} elevation={5}>
+    <Paper sx={{padding:"15px 20px",height:"80vh"}} elevation={7}>
         <Stack display="flex" direction="row" justifyContent="space-between" alignItems="center">
             <Typography variant="h5" fontWeight="bold">
                 My Chat
@@ -29,7 +29,7 @@ function MyChat({chats,setChats,selectForChat}) {
                             <Avatar src={chat.isGroupChat ? chat.gpPic || "" : getSender(user,chat).pic} /> 
                         </ListItemAvatar>
                          <ListItemText primary={chat.isGroupChat ? chat.chatName : getSender(user,chat).name} 
-                         secondary={chat.latestMessage ? (`${chat.latestMessage.sender} : ${chat.latestMessage.content}`) : ""}
+                         secondary={chat.latestMessage ? (`${chat.latestMessage.sender._id === user._id ? "You" : chat.latestMessage.sender.name} : ${chat.latestMessage.content}`) : ""}
                          />
                     </ListItem>
                 ))
