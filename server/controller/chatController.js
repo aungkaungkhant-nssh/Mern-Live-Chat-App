@@ -12,7 +12,8 @@ exports.accessChat = async(req,res,next)=>{
                     {
                         $and:[
                             {users:{$elemMatch:{$eq:id}}},
-                            {users:{$elemMatch:{$eq:req.user._id}}}
+                            {users:{$elemMatch:{$eq:req.user._id}}},
+                            {isGroupChat:false}
                         ]
                     },
                     {
@@ -21,13 +22,13 @@ exports.accessChat = async(req,res,next)=>{
                 ]
             }
            
-        ).populate("users","-password");
+        ).populate("users","-password").populate({path:"latestMessage",populate:{path:"sender",select:"name email pic"}});
         
         if(chat.length){
             res.status(200).json({message:"Creat Chat",data:chat[0]});
         }else{
             let createChat = await Chat.create({users:[authUserId,id]});
-            createChat =await Chat.findById(createChat._id).populate("users","-password");
+            createChat =await Chat.findById(createChat._id).populate("users","-password").populate({path:"latestMessage",populate:{path:"sender",select:"name email pic"}});
             res.status(201).json({message:"Create Chat",data:createChat})
         }
     }catch(err){

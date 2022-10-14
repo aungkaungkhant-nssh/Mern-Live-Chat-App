@@ -1,18 +1,31 @@
-import React,{useState} from 'react'
+import React,{useState,useEffect} from 'react'
 import {Paper,Box, Typography,Stack,Chat, IconButton} from '@mui/material'
 import { getSender } from '../../config/ChatLogic'
 import { AuthState } from '../../context/AuthProvider'
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ProfileDialog from '../User/ProfileDialog'
+import SingleChat from './SingleChat';
+import io from 'socket.io-client';
+const ENDPOINT = "http://localhost:8000";
+
+var socket;
 function ChatBox({userSelected,setUserSelected,chats,setChats}) {
   const user = AuthState();
   const [showProfileDailog,setShowProfileDailog] = useState(false);
+  useEffect(()=>{
+    if(userSelected){
+      socket = io(ENDPOINT);
+      socket.emit("joinchat",userSelected._id)
+    }
+    
+  },[userSelected])
+ 
   return (
-    <Paper  sx={{padding:"15px 20px",height:"80vh"}} elevation={5}>
+    <Paper  sx={{padding:"15px 20px",height:"80vh",width:{sm:"95"},position:"relative"}} elevation={5}>
         {
           userSelected ? (
-            <Box>
+            <Box > 
                 <Stack display="flex" direction="row" justifyContent="space-between" alignItems="center">
                     <Box display="flex" direction="row" alignItems="center">
                          <IconButton sx={{display:{sm:"block",md:"none"},marginRight:".3rem"}} onClick={()=>setUserSelected(null)}>
@@ -25,6 +38,7 @@ function ChatBox({userSelected,setUserSelected,chats,setChats}) {
                         <MoreVertIcon onClick={()=>setShowProfileDailog(true)}/>
                     </IconButton>
                 </Stack>
+                <SingleChat userSelected={userSelected} chats={chats} setChats={setChats} />
             </Box>
           ):(
             <Box  display="flex" justifyContent="center" alignItems="center"
