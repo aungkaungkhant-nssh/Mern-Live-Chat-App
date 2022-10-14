@@ -1,15 +1,15 @@
 import React,{useState} from 'react'
 import {Paper,Button, Typography,Stack,List,ListItem,ListItemAvatar,ListItemText,Avatar} from '@mui/material'
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import {grey } from '@mui/material/colors';
+import {grey,teal,deepPurple } from '@mui/material/colors';
 import { AuthState } from '../../context/AuthProvider';
 import {getSender} from '../../config/ChatLogic'
 import CreateGroupDialog from './CreateGroupDialog';
 
-function MyChat({chats,setChats,selectForChat}) {
+function MyChat({chats,setChats,selectForChat,userSelected}) {
     const user = AuthState();
     const [showCreateGroup,setShowCreateGroup] = useState(false);
-  
+
   return (
     <Paper sx={{padding:"15px 20px",height:"80vh"}} elevation={7}>
         <Stack display="flex" direction="row" justifyContent="space-between" alignItems="center">
@@ -24,7 +24,7 @@ function MyChat({chats,setChats,selectForChat}) {
         <List sx={{padding:"5px"}}>
             {
               chats.length > 0 &&  chats.map((chat)=>(
-                    <ListItem onClick={()=>selectForChat(chat)} key={chat._id} sx={{padding:"10px",marginBottom:"12px",backgroundColor:grey[200],borderRadius:"5px",cursor:"pointer"}}>
+                    <ListItem onClick={()=>selectForChat(chat)} key={chat._id} sx={{padding:"10px",marginBottom:"12px",backgroundColor:userSelected && userSelected._id===chat._id ? grey[400] : grey[200],borderRadius:"5px",cursor:"pointer"}}>
                         <ListItemAvatar>
                             <Avatar src={chat.isGroupChat ? chat.gpPic || "" : getSender(user,chat).pic} /> 
                         </ListItemAvatar>

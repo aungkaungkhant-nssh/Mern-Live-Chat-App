@@ -7,20 +7,13 @@ import {Grid, Stack,Box} from "@mui/material"
 import { makeStyles } from '@mui/styles';
 import Axios from '../config/Axios';
 import { useState } from 'react';
-const useStyles= makeStyles({
-  show:{
-    display:"block !important"
-  },
-  hide:{
-    display:"none !important"
-  }
-})
+
 function Chat() {
-  const classes = useStyles();
+
   const user= AuthState();
   const [chats,setChats] = useState([]);
   const [userSelected,setUserSelected] = useState(null);
-  const [showChatBox,setShowChatBox] =useState(false);
+
   const accessChat = async (value)=>{
     const config = {
       headers:{
@@ -37,7 +30,7 @@ function Chat() {
   }
   const selectForChat =(chat)=>{
     setUserSelected(chat);
-    setShowChatBox(true)
+
   }
   return (
     <>
@@ -45,7 +38,7 @@ function Chat() {
       <Box>
         <Grid container  spacing={1} p={2} >
               <Grid  item xs={12} md={4}  display={{ xs: userSelected ? "none":"block", lg: "block" }}>
-                {user && <MyChat chats={chats} setChats={setChats} selectForChat={selectForChat}/>}
+                {user && <MyChat chats={chats} setChats={setChats} selectForChat={selectForChat} userSelected={userSelected}/>}
               </Grid>
               <Grid item  xs={12} md={8}  display={{ xs: userSelected ? "block":"none", lg: "block" }}>
                 {user && <ChatBox chats={chats} setChats={setChats} userSelected={userSelected} setUserSelected={setUserSelected} />}
