@@ -39,6 +39,18 @@ mongoose.connect(process.env.DB_URL)
             ))
            
         })
+        socket.on("startTyping",(data)=>{
+           const users = data.users;
+           users.map((user)=>(
+            socket.in(user._id).emit("startTyping",data)
+           ))
+        })
+        socket.on("stopTyping",(data)=>{
+            const users = data.users;
+            users.map((user)=>{
+              socket.in(user._id).emit("stopTyping",data);  
+            })
+        })
     })
 })
 .catch((err)=>{
