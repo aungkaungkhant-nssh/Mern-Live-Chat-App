@@ -7,13 +7,17 @@ import { AuthState } from '../context/AuthProvider';
 import ProfileDialog from './User/ProfileDialog';
 import { useNavigate } from 'react-router-dom';
 import SideDrawer from './User/SideDrawer';
+import { NotificationState } from '../context/NotificationProvider';
+import NotificationsDialog from './Chat/NotificationsDialog';
 
-function Navbar({accessChat}) {
+function Navbar({accessChat,readNotfication}) {
   const user= AuthState();
+  const {notifications} = NotificationState();
   const [anchorEl,setanchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const [showDialog,setShowDialog] = useState(false);
   const [showSideDrawer,setShowSideDrawer] = useState(false);
+  const [showNotificationsDialog,setShowNotificationsDialog] = useState(false);
   const navigate  =useNavigate();
   const handleClick = (event) => {
     setanchorEl(event.currentTarget);
@@ -25,7 +29,6 @@ function Navbar({accessChat}) {
     localStorage.removeItem("userInfo");
     navigate("/");
   }
- 
   return (
     <>
        <AppBar position="static" color="secondary">
@@ -65,9 +68,12 @@ function Navbar({accessChat}) {
             color="inherit"
             sx={{marginRight:"10px"}}
           >
-            <Badge badgeContent={17} color="error">
+          
+          <Badge onClick={()=>setShowNotificationsDialog(true)} badgeContent={notifications && notifications.length} color={notifications ? "error" :"secondary"}>
               <Notifications />
-            </Badge>
+          </Badge>
+    
+          
           </IconButton>
           <Tooltip title="Account setting">
               <IconButton
@@ -135,6 +141,7 @@ function Navbar({accessChat}) {
        </AppBar>
        <SideDrawer open={showSideDrawer} setOpen={setShowSideDrawer} accessChat={accessChat}/>
        {showDialog && <ProfileDialog open={showDialog} setOpen={setShowDialog} profileUser={user}/>}
+       {showNotificationsDialog && <NotificationsDialog open={showNotificationsDialog} setOpen={setShowNotificationsDialog} readNotfication={readNotfication} />}
     </>
    
   )
