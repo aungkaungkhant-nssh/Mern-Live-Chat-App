@@ -7,12 +7,14 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ProfileDialog from '../User/ProfileDialog'
 import SingleChat from './SingleChat';
 import io from 'socket.io-client';
+import { NotificationState } from '../../context/NotificationProvider';
 const ENDPOINT = "http://localhost:8000";
 
 var socket;
 function ChatBox({userSelected,setUserSelected,chats,setChats}) {
   const user = AuthState();
   const [showProfileDailog,setShowProfileDailog] = useState(false);
+  const {notifications,setNotifications} = NotificationState();
   useEffect(()=>{
     if(userSelected){
       socket = io(ENDPOINT);

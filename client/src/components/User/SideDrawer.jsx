@@ -40,7 +40,7 @@ function SideDrawer({open,setOpen,accessChat}) {
         // console.log(err)
       }
       
-    }, 4000);
+    }, 2000);
   }
   const handleClick = (value)=>{
     setOpen(false);

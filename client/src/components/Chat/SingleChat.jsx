@@ -8,10 +8,14 @@ import SendIcon from '@mui/icons-material/Send';
 import { sameSender,sameMessageGpUser } from '../../config/ChatLogic';
 import ScrollableFeed from 'react-scrollable-feed';
 import Typing from '../../assets/images/typing-indicator.gif'
+import { NotificationState } from '../../context/NotificationProvider';
+import { json } from 'react-router-dom';
 const ENDPOINT = "http://localhost:8000";
 var socket,selectedCompare;
+
 function SingleChat({userSelected,chats,setChats}) {
   const user = AuthState();
+  const {notifications,setNotifications} = NotificationState();
   const [loading,setLoading] = useState(false);
   const [content,setContent] = useState("");
   const [messages,setMessages] = useState([]);
@@ -51,12 +55,14 @@ function SingleChat({userSelected,chats,setChats}) {
         authorization:`Bearer ${user.token}`
       }
     }
+    
     try{
      let res =  await Axios.post("/api/message",{chatId:userSelected._id,content},config);
+   
      socket.emit("sendMessage",res.data.data);
      setMessages([...messages,res.data.data.messages]);
- 
      setContent("")
+   
     }catch(err){
       console.log(err);
     }
@@ -66,7 +72,14 @@ function SingleChat({userSelected,chats,setChats}) {
   useEffect(()=>{
     socket.on("messageRecieved",(messageRecieved)=>{
       if(selectedCompare && selectedCompare._id!== messageRecieved.chat._id){
-
+        if(notifications===null){
+          setNotifications([messageRecieved]);
+          localStorage.setItem("notifications",JSON.stringify([messageRecieved]))
+        }else{
+          setNotifications([...notifications,messageRecieved]);
+          localStorage.setItem("notifications",JSON.stringify([...notifications,messageRecieved]))
+        }
+       
       }else{
         setMessages([...messages,messageRecieved.messages])
 
@@ -79,7 +92,6 @@ function SingleChat({userSelected,chats,setChats}) {
   const pressKeyEnterSendMessage = (e)=>{
     if(e.key === "Enter"){
       handleSendMessage();
-      setContent("")
     }
   }
   /* user is Typing */
@@ -147,7 +159,7 @@ function SingleChat({userSelected,chats,setChats}) {
           }
           <Stack sx={{position:"absolute",bottom:5,left:10,right:10,zIndex:1000}}>
           {isTyping && <img src={Typing} alt="" style={{width:"50px",height:"50px",marginLeft:"1rem"}} />}
-            <TextField sx={{backgroundColor:"#eee"}}   onChange={userTyping} onKeyDown={pressKeyEnterSendMessage} size='small' color="secondary"  placeholder="Text Message"
+            <TextField sx={{backgroundColor:"#eee"}} value={content}   onChange={userTyping} onKeyDown={pressKeyEnterSendMessage} size='small' color="secondary"  placeholder="Text Message"
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
