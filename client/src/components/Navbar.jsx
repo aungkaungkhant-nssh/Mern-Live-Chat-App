@@ -101,8 +101,8 @@ function Navbar({accessChat,readNotfication}) {
                 filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
                 mt: 1.5,
                 '& .MuiAvatar-root': {
-                  width: 50,
-                  height: 50,
+                  width: 60,
+                  height: 60,
                   ml: -0.5,
                   mr: 1,
                 },
@@ -128,9 +128,7 @@ function Navbar({accessChat,readNotfication}) {
               <MenuItem onClick={()=>setShowDialog(true)}>
                  <AccountCircle sx={{marginRight:"10px"}} />  Profile
               </MenuItem>
-              <MenuItem onClick={()=>setShowDialog(true)}>
-                <Settings  sx={{marginRight:"10px"}}/> Account Setting
-              </MenuItem>
+             
               <Divider />
               <MenuItem onClick={userLogout}>
                 <Logout  sx={{marginRight:"10px"}}/>  Logout

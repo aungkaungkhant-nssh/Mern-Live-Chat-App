@@ -14,6 +14,7 @@ function Register() {
   const [errorMessage,setErrorMessage]= useState("");
   const navigate  = useNavigate();
   const [loading,setLoading] = useState(false);
+  /* User Register */
   const userRegister =async (e)=>{
     e.preventDefault();
     setLoading(true);

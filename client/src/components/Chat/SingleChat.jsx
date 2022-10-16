@@ -7,10 +7,10 @@ import Axios from '../../config/Axios';
 import SendIcon from '@mui/icons-material/Send';
 import { sameSender,sameMessageGpUser } from '../../config/ChatLogic';
 import ScrollableFeed from 'react-scrollable-feed';
-import Typing from '../../assets/images/typing-indicator.gif'
+import Typing from '../../assets/images/TypingStatus.gif'
 import { NotificationState } from '../../context/NotificationProvider';
 import { json } from 'react-router-dom';
-const ENDPOINT = "http://localhost:8000";
+const ENDPOINT = "https://men-live-chat.herokuapp.com";
 var socket,selectedCompare;
 
 function SingleChat({userSelected,chats,setChats}) {
@@ -116,25 +116,31 @@ function SingleChat({userSelected,chats,setChats}) {
     })
   },[content]);
   return (
-    <Stack>
+    <Stack >
+          
           {
             loading ?  <Box display="flex" justifyContent="center" alignItems="center"  minHeight="52vh"><CircularProgress size="5rem"  color="secondary"/></Box>:(
-              <Box sx={{margin:"1rem",height:"410px",overflowY:"scroll"}}>
+              <Box sx={{margin:"1rem",maxHeight:"360px",overflowY:"scroll"}}>
                   <ScrollableFeed>
                       {
                         messages.map((message,index)=>(
-                          <>
-                            <Typography marginBottom={index=== messages.length-1 && isTyping  ? "3.5rem" : sameSender(message,index,messages) ? ".5rem" : "2rem"} key={message._id} component="div" display="flex" justifyContent={message.sender._id === user._id ? "end" : "start"} alignItems="top">
+                            <Box marginBottom={index=== messages.length-1 && isTyping  ? "3.5rem" : sameSender(message,index,messages) ? ".5rem" : "2rem"} key={message._id} component="div" display="flex" justifyContent={"space-between"} alignItems="top">
                               {
                                 message.sender._id === user._id ? (
-                                    <Chip label={message.content} color="secondary"></Chip>
+                                    <>
+                                      <div></div>
+                                      <Chip label={message.content} color="secondary"></Chip>
+                                    </>
+                                    
                                   
                                 ):(
                                   <>
-                                        
+                                      <Box sx={{display:"flex"}}>
                                         {!sameSender(message,index,messages) ? (<Avatar src={message.sender.pic} sx={{height:"32px",width:"32px",marginRight:"5px"}}></Avatar>) : <div style={{width:"32px",height:"32px",marginRight:"5px"}}></div>}
-                                        <Chip label={message.content}></Chip>
-                                        {userSelected.isGroupChat  && sameMessageGpUser(message,index,messages) && (<Typography variant="body1" color="darkness.middle" sx={{marginLeft:"1rem"}}>{message.sender.name}</Typography>)}
+                                          <Chip label={message.content}></Chip>
+                                          {userSelected.isGroupChat  && sameMessageGpUser(message,index,messages) && (<Typography variant="body1" color="darkness.middle" sx={{marginLeft:"1rem"}}>{message.sender.name}</Typography>)}
+                                      </Box>
+                                       <div></div>
                                        
                                   </>
                                   
@@ -142,11 +148,7 @@ function SingleChat({userSelected,chats,setChats}) {
                                
                               }
                                 
-                             </Typography>
-                            
-                             
-                            
-                          </> 
+                             </Box>
                         ))
                       
                       }
@@ -157,8 +159,8 @@ function SingleChat({userSelected,chats,setChats}) {
               </Box>  
             )
           }
-          <Stack sx={{position:"absolute",bottom:5,left:10,right:10,zIndex:1000}}>
-          {isTyping && <img src={Typing} alt="" style={{width:"50px",height:"50px",marginLeft:"1rem"}} />}
+          <Stack sx={{position:"absolute",bottom:0,left:10,right:10,zIndex:1000}}>
+          {isTyping && <img src={Typing} alt="" style={{width:"80px",height:"80px",marginLeft:".3rem"}} />}
             <TextField sx={{backgroundColor:"#eee"}} value={content}   onChange={userTyping} onKeyDown={pressKeyEnterSendMessage} size='small' color="secondary"  placeholder="Text Message"
               InputProps={{
                 endAdornment: (

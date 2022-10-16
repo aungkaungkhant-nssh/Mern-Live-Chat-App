@@ -49,8 +49,8 @@ function Chat() {
     const userSelectedChat =  chats.find((c)=> c._id === chat._id);
     if(!userSelectedChat){
       setChats([...chats,chat]);
-      selectForChat(chat)
     }
+    selectForChat(chat)
   }
 
   return (

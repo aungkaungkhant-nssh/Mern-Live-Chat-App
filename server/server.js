@@ -2,16 +2,20 @@ const express = require("express");
 const app =express();
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
+const compression = require("compression");
+
 const cors = require("cors");
 require('dotenv').config();
 
-app.use(cors())
+app.use(cors());
+
 
 const userRoute = require('./routes/userRoute');
 const chatRoute = require("./routes/chatRoute");
 const messageRoute = require('./routes/messageRoute');
 const { Server } = require("socket.io");
 
+app.use(compression());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
@@ -19,10 +23,11 @@ app.use('/api/user',userRoute);
 app.use('/api/chat',chatRoute);
 app.use('/api/message',messageRoute);
 
-mongoose.connect(process.env.DB_URL)
+const port = process.env.PORT || 8000
+mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.t9jp2.mongodb.net/${process.env.DB_DEFAULT_DATABASE}?retryWrites=true&w=majority`)
 .then(()=>{
-   let server =  app.listen(process.env.PORT,()=>{
-        console.log(`Server is running on port ${process.env.PORT}`)
+   let server =  app.listen(port,()=>{
+        console.log(`Server is running on port ${port}`)
     })
     const io = new Server(server,{cors:{origin:"*"}});
     io.on("connection",(socket)=>{

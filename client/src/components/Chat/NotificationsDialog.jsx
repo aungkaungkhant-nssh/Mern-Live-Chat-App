@@ -10,7 +10,7 @@ function NotificationsDialog({open,setOpen,readNotfication}) {
     readNotfication(chat);
     setOpen(false);
   }
-  console.log(notifications)
+
 
   return (
      <Dialog

@@ -8,13 +8,14 @@ import ProfileDialog from '../User/ProfileDialog'
 import SingleChat from './SingleChat';
 import io from 'socket.io-client';
 import { NotificationState } from '../../context/NotificationProvider';
-const ENDPOINT = "http://localhost:8000";
+const ENDPOINT = "https://men-live-chat.herokuapp.com";
 
 var socket;
 function ChatBox({userSelected,setUserSelected,chats,setChats}) {
   const user = AuthState();
   const [showProfileDailog,setShowProfileDailog] = useState(false);
   const {notifications,setNotifications} = NotificationState();
+  
   useEffect(()=>{
     if(userSelected){
       socket = io(ENDPOINT);
@@ -27,7 +28,7 @@ function ChatBox({userSelected,setUserSelected,chats,setChats}) {
     <Paper  sx={{padding:"15px 20px",height:"80vh",width:{sm:"95"},position:"relative"}} elevation={5}>
         {
           userSelected ? (
-            <Box > 
+            <Box> 
                 <Stack display="flex" direction="row" justifyContent="space-between" alignItems="center">
                     <Box display="flex" direction="row" alignItems="center">
                          <IconButton sx={{display:{sm:"block",md:"none"},marginRight:".3rem"}} onClick={()=>setUserSelected(null)}>
